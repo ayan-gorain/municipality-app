@@ -25,6 +25,7 @@ COPY --from=build /app/dist/municipality-frontend/browser/index.html ./
 COPY --from=build /app/dist/municipality-frontend/browser/*.js ./
 COPY --from=build /app/dist/municipality-frontend/browser/*.css ./
 COPY --from=build /app/dist/municipality-frontend/browser/favicon.ico ./
+COPY --from=build /app/public/_redirects ./
 
 # Clean up any extra files that might have been copied
 RUN ls -la

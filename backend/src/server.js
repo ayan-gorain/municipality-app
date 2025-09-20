@@ -19,7 +19,17 @@ cloudinary.v2.config({
 });
 
 const app = express();
-app.use(cors());
+
+// Configure CORS for production
+const corsOptions = {
+  origin: [
+    'http://localhost:4200', // Development frontend
+    'https://municipality-app-frontend.onrender.com' // Production frontend
+  ],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 

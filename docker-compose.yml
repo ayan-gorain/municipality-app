@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - MONGO_URI=mongodb://mongo:27017/municipality-app
+      - JWT_SECRET=your_super_secret_key
+      - CLOUDINARY_CLOUD_NAME=de8goiw4c
+      - CLOUDINARY_API_KEY=199371267173525
+      - CLOUDINARY_API_SECRET=ZyXqD4S6tKVElJC1lqXKiSw3vhY
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend/municipality-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
