@@ -20,12 +20,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Before:
-  COPY --from=build /app/dist/out/browser ./
-
-  # After:
-  COPY --from=build /app/dist/municipality-frontend ./
-  
+# Copy built app from build stage
+COPY --from=build /app/dist/municipality-frontend/out/browser ./
 
 # Install http-server globally
 RUN npm install -g http-server
