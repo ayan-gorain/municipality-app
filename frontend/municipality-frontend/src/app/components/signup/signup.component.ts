@@ -21,6 +21,7 @@ export class SignupComponent implements OnInit {
   role: string = 'customer';
   photoFile: File | null = null;
   photoPreview: string | ArrayBuffer | null = null;
+  private hasAttemptedSignup = false;
 
   // NgRx observables
   isLoading$: Observable<boolean>;
@@ -36,16 +37,18 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     // Listen for authentication success
     this.isAuthenticated$.subscribe(isAuthenticated => {
-      if (isAuthenticated) {
+      if (isAuthenticated && this.hasAttemptedSignup) {
         this.clearForm();
         alert('Signup successful! Welcome! 🎉');
+        this.hasAttemptedSignup = false; // Reset flag
       }
     });
 
     // Listen for errors
     this.error$.subscribe(error => {
-      if (error) {
+      if (error && this.hasAttemptedSignup) {
         alert('Signup failed: ' + error);
+        this.hasAttemptedSignup = false; // Reset flag
       }
     });
   }
@@ -92,6 +95,8 @@ export class SignupComponent implements OnInit {
   }
 
   private performSignup(photoData: string) {
+    this.hasAttemptedSignup = true; // Set flag when signup is attempted
+    
     // Dispatch signup action to NgRx store
     this.store.dispatch(AuthActions.signupStart({
       name: this.name,

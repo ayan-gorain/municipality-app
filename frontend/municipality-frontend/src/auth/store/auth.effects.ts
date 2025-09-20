@@ -30,7 +30,17 @@ export class AuthEffects {
             return AuthActions.loginSuccess({ user, token });
           }),
           catchError((error) => {
-            const errorMessage = error.message || 'Login failed';
+            console.error('Login error details:', error);
+            let errorMessage = 'Login failed';
+            
+            if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+              errorMessage = error.graphQLErrors[0].message;
+            } else if (error.networkError) {
+              errorMessage = 'Network error. Please check your connection.';
+            } else if (error.message) {
+              errorMessage = error.message;
+            }
+            
             return of(AuthActions.loginFailure({ error: errorMessage }));
           })
         )

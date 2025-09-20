@@ -17,6 +17,7 @@ import * as AuthSelectors from '../../../auth/store/auth.selectors';
 export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
+  private hasAttemptedLogin = false;
 
   // NgRx observables
   isLoading$: Observable<boolean>;
@@ -32,16 +33,20 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     // Listen for authentication success
     this.isAuthenticated$.subscribe(isAuthenticated => {
-      if (isAuthenticated) {
+      if (isAuthenticated && this.hasAttemptedLogin) {
         this.clearForm();
+        console.log('Login successful!');
         alert('Login successful! Welcome back! 🎉');
+        this.hasAttemptedLogin = false; // Reset flag
       }
     });
 
     // Listen for errors
     this.error$.subscribe(error => {
-      if (error) {
+      if (error && this.hasAttemptedLogin) {
+        console.error('Login error:', error);
         alert('Login failed: ' + error);
+        this.hasAttemptedLogin = false; // Reset flag
       }
     });
   }
@@ -52,6 +57,8 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.hasAttemptedLogin = true; // Set flag when login is attempted
+    
     // Dispatch login action to NgRx store
     this.store.dispatch(AuthActions.loginStart({
       email: this.email,
