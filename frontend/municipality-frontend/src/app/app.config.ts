@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideApollo(() => {
       return new ApolloClient({
-        link: new HttpLink({ uri: environment.graphqlUri }),
+        link: new HttpLink({ uri: `${environment.apiUrl}/graphql` }),
         cache: new InMemoryCache(),
       });
     }),

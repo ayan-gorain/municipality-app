@@ -1,5 +1,6 @@
-export const environment = {
-  production: true,
-  graphqlUri: 'https://your-production-domain/graphql',
-  uploadUri: 'https://your-production-domain/api/upload',
-};
+declare const API_URL:string
+
+export const environment={
+    production:true,
+    apiUrl:API_URL
+}
