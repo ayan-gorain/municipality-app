@@ -20,11 +20,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy built app from build stage
+# Copy built app from build stage - only the browser files
 COPY --from=build /app/dist/municipality-frontend/browser/index.html ./
 COPY --from=build /app/dist/municipality-frontend/browser/*.js ./
 COPY --from=build /app/dist/municipality-frontend/browser/*.css ./
 COPY --from=build /app/dist/municipality-frontend/browser/favicon.ico ./
+
+# Clean up any extra files that might have been copied
+RUN ls -la
 
 # Install http-server globally
 RUN npm install -g http-server
