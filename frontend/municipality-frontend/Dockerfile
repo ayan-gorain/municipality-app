@@ -1,27 +1,33 @@
-# frontend/Dockerfile
+# Multi-stage build for Angular app
 FROM node:20-alpine as build
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-# Pass API_URL at build time
-ARG API_URL
-RUN echo "export const environment = { production: true, apiUrl: '${API_URL}' };" \
-  > src/environments/environment.prod.ts
-RUN npm run build -- --output-path=./dist/out --base-href=/  --configuration production
 
-# We can use a lightweight server like Nginx for production,
-# but for simplicity, we'll use a simple http-server.
-FROM node:20-alpine
 WORKDIR /app
-# COPY --from=build /app/dist/out ./
-COPY --from=build /app/dist/out/browser ./dist/out
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (including dev dependencies for build)
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Build the Angular app
+RUN npm run build --configuration=production
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy built app from build stage
+COPY --from=build /app/dist/municipality-frontend ./
+
+# Install http-server globally
 RUN npm install -g http-server
-# EXPOSE 4200
-# CMD ["http-server", "-p", "4200", "./"]
-# Expose Render’s dynamic port (not hardcoded)
+
+# Expose port (Render will set PORT environment variable)
 EXPOSE 8080
 
-# Use $PORT instead of 4200
-# CMD ["sh", "-c", "http-server ./dist/out -p $PORT"]
-CMD ["sh", "-c", "http-server ./dist/out -p $PORT -P http://127.0.0.1:$PORT?"]
+# Start the server
+CMD ["sh", "-c", "http-server . -p $PORT -a 0.0.0.0"]
