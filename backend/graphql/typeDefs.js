@@ -4,14 +4,30 @@ export const typeDefs = `#graphql
     name: String!
     email: String!
     role: String!
-    photoUrl: String
+    photo: String
   }
 
-  type AuthPayload {
+  type SignupPayload {
     token: String!
-    role: String!
+    user: User!
+  }
+
+  type LoginPayload {
+    token: String!
+    user: User!
+  }
+
+  input SignupInput {
     name: String!
-    photoUrl: String
+    email: String!
+    password: String!
+    role: String
+    photo: String
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
   }
 
   type Query {
@@ -19,7 +35,7 @@ export const typeDefs = `#graphql
   }
 
   type Mutation {
-    signup(name: String!, email: String!, password: String!, role: String, photo: String): String!
-    login(email: String!, password: String!): AuthPayload!
+    signup(input: SignupInput!): SignupPayload!
+    login(input: LoginInput!): LoginPayload!
   }
 `;
