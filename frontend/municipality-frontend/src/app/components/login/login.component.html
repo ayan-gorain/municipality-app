@@ -1,0 +1,35 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200">
+  <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm">
+    <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Welcome Back</h2>
+
+    <div class="space-y-4">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        placeholder="Email"
+        class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <input
+        type="password"
+        [(ngModel)]="password"
+        placeholder="Password"
+        class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <button
+        (click)="onLogin()"
+        [disabled]="isLoading$ | async"
+        class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-semibold transition-colors"
+      >
+        <span *ngIf="!(isLoading$ | async)">Login</span>
+        <span *ngIf="isLoading$ | async">Logging in...</span>
+      </button>
+    </div>
+
+    <p class="mt-6 text-center text-gray-500 text-sm">
+      Don't have an account?
+      <a routerLink="/signup" class="text-blue-500 hover:underline">Sign Up</a>
+    </p>
+  </div>
+</div>

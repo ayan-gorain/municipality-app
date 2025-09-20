@@ -8,7 +8,8 @@ export const resolvers = {
     users: async () => await User.find(),
   },
   Mutation: {
-    signup: async (_, { name, email, password, role, photo }) => {
+    signup: async (_, { input }) => {
+      const { name, email, password, role, photo } = input;
       const hashed = await bcrypt.hash(password, 10);
 
       let photoUrl = "";
@@ -17,12 +18,26 @@ export const resolvers = {
         photoUrl = uploaded.secure_url;
       }
 
-      const user = new User({ name, email, password: hashed, role, photoUrl });
+      const user = new User({ name, email, password: hashed, role, photo: photoUrl });
       await user.save();
 
-      return "User created!";
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+
+      return { 
+        token, 
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          photo: user.photo
+        }
+      };
     },
-    login: async (_, { email, password }) => {
+    login: async (_, { input }) => {
+      const { email, password } = input;
       const user = await User.findOne({ email });
       if (!user) throw new Error("User not found");
 
@@ -33,7 +48,16 @@ export const resolvers = {
         expiresIn: "1d",
       });
 
-      return { token, role: user.role, name: user.name, photoUrl: user.photoUrl };
+      return { 
+        token, 
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          photo: user.photo
+        }
+      };
     },
   },
 };
