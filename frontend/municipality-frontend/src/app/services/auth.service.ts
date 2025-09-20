@@ -31,7 +31,7 @@ export class AuthService {
         }
       `,
       variables: { input: { name, email, password, role, photo } },
-    }as any);
+    } as any);
   }
 
   login(email: string, password: string) {
@@ -51,6 +51,6 @@ export class AuthService {
         }
       `,
       variables: { input: { email, password } },
-    }as any);
+    } as any);
   }
 }
