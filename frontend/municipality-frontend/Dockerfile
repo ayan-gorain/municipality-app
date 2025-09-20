@@ -30,11 +30,11 @@ COPY --from=build /app/public/_redirects ./
 # Clean up any extra files that might have been copied
 RUN ls -la
 
-# Install http-server globally
-RUN npm install -g http-server
+# Install serve globally (better for SPAs)
+RUN npm install -g serve
 
 # Expose port (Render will set PORT environment variable)
 EXPOSE 8080
 
-# Start the server
-CMD ["sh", "-c", "http-server . -p $PORT -a 0.0.0.0"]
+# Start the server with SPA support
+CMD ["sh", "-c", "serve -s . -l $PORT"]

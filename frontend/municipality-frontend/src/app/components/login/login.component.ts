@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { FormsModule } from "@angular/forms";
 import { NgIf } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import * as AuthActions from '../../../auth/store/auth.actions';
 import * as AuthSelectors from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, NgIf, CommonModule],
+  imports: [FormsModule, NgIf, CommonModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
